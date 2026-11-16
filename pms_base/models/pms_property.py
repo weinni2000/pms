@@ -2,16 +2,17 @@
 # Copyright 2019  Dario Lodeiros
 # Copyright (c) 2021 Open Source Integrators
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-import pytz
 
 from odoo import api, fields, models
+
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class PmsProperty(models.Model):
     _name = "pms.property"
     _description = "Property"
-    _inherit = ["mail.thread", "mail.activity.mixin"]
-    _inherits = {"res.partner": "partner_id"}
+    _inherit = ["mail.thread", "mail.activity.mixin"]  # noqa: RUF012
+    _inherits = {"res.partner": "partner_id"}  # noqa: RUF012
 
     def _default_team_id(self):
         return self.env.ref("pms_base.pms_team_default", raise_if_not_found=False)
@@ -24,7 +25,6 @@ class PmsProperty(models.Model):
         ondelete="cascade",
     )
     owner_id = fields.Many2one(
-        string="Owner",
         help="The owner of the property.",
         comodel_name="res.partner",
         required=True,
@@ -33,10 +33,8 @@ class PmsProperty(models.Model):
     property_child_ids = fields.One2many(
         "pms.property", "parent_id", string="Children Property"
     )
-    company_id = fields.Many2one(string="Company", comodel_name="res.company")
-    team_id = fields.Many2one(
-        "pms.team", string="Team", default=lambda self: self._default_team_id()
-    )
+    company_id = fields.Many2one(comodel_name="res.company")
+    team_id = fields.Many2one("pms.team", default=lambda self: self._default_team_id())
     room_ids = fields.One2many(
         string="Rooms",
         help="List of rooms in the property.",
@@ -71,7 +69,7 @@ class PmsProperty(models.Model):
         help="This field is used to determine the timezone of the property.",
         required=True,
         default=lambda self: self.env.user.tz or "UTC",
-        selection=lambda self: [(tz, tz) for tz in pytz.all_timezones],
+        selection=_tz_get,
     )
     area = fields.Float()
     heating = fields.Selection(

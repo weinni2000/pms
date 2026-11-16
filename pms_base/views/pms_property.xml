@@ -12,7 +12,8 @@
                             name="action_view_childs_property_list"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-users"
+                            icon="group"
+                            icon_class="oi-filled"
                             invisible="childs_property_count == 0"
                         >
                             <field
@@ -207,7 +208,7 @@
                         name="owner_id"
                         string="Owners"
                         enable_counters="True"
-                        icon="fa-user-o"
+                        icon="person"
                     />
                     <field
                         name="team_id"
