@@ -1,8 +1,9 @@
 # Copyright (c) 2024 Gray Matter Logic
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import json
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
+from odoo import fields
 from odoo.tests import HttpCase, tagged
 
 
@@ -11,7 +12,7 @@ class TestWebsiteSaleControllers(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.website = cls.env["website"].get_current_website()
+        cls.website = cls.env["website"].search([], limit=1)
         cls.product = cls.env.ref("pms_sale.product_product_reservation")
         cls.partner_owner = cls.env["res.partner"].create({"name": "Website Owner"})
         cls.property = cls.env["pms.property"].create(
@@ -20,7 +21,6 @@ class TestWebsiteSaleControllers(HttpCase):
                 "owner_id": cls.partner_owner.id,
                 "website_id": cls.website.id,
                 "is_published": True,
-                "website_published": True,
                 "city": "Boston",
                 "no_of_guests": 6,
                 "min_nights": 1,
@@ -44,7 +44,7 @@ class TestWebsiteSaleControllers(HttpCase):
         )
         cls.category = cls.env["pms.website.category"].create({"name": "City Stays"})
         cls.property.property_category_ids = cls.category
-        today = datetime.now()
+        today = fields.Datetime.now()
         cls.dates_free = (
             (today + timedelta(days=60)).strftime("%Y-%m-%d"),
             (today + timedelta(days=65)).strftime("%Y-%m-%d"),
@@ -93,7 +93,6 @@ class TestWebsiteSaleControllers(HttpCase):
                 "parent_id": self.property.id,
                 "website_id": self.website.id,
                 "is_published": True,
-                "website_published": True,
                 "city": "Boston",
             }
         )
@@ -121,10 +120,8 @@ class TestWebsiteSaleControllers(HttpCase):
             }
         )
         self.authenticate(None, None)
-        start = datetime.strptime(self.dates_blocked[0], "%Y-%m-%d").strftime(
-            "%m/%d/%Y"
-        )
-        end = datetime.strptime(self.dates_blocked[1], "%Y-%m-%d").strftime("%m/%d/%Y")
+        start = date.fromisoformat(self.dates_blocked[0]).strftime("%m/%d/%Y")
+        end = date.fromisoformat(self.dates_blocked[1]).strftime("%m/%d/%Y")
         response = self.url_open(f"/property?date_range={start} - {end}")
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(b"Website Sale Property", response.content)

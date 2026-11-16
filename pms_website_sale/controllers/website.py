@@ -32,10 +32,9 @@ class PropertyTableCompute:
     def process(self, products, ppg=20, ppr=4):
         # Compute products positions on the grid
         minpos = 0
-        index = 0
         maxy = 0
         x = 0
-        for p in products:
+        for index, p in enumerate(products):
             x = min(1, ppr)
             y = min(1, ppr)
             if index >= ppg:
@@ -61,7 +60,6 @@ class PropertyTableCompute:
             self.table[pos // ppr][pos % ppr] = {"product": p, "x": x, "y": y}
             if index <= ppg:
                 maxy = max(maxy, y + (pos // ppr))
-            index += 1
 
         # Format table according to HTML needs
         rows = sorted(self.table.items())
@@ -87,8 +85,8 @@ class WebsiteSale(WebsiteSale):
             date_range = args.get("date_range").split("-")
             start = date_range[0].strip() + " 00:00:00"
             end = date_range[1].strip() + " 23:59:59"
-            start = datetime.strptime(start, "%m/%d/%Y %H:%M:%S")
-            end = datetime.strptime(end, "%m/%d/%Y %H:%M:%S")
+            start = datetime.strptime(start, "%m/%d/%Y %H:%M:%S")  # noqa: DTZ007
+            end = datetime.strptime(end, "%m/%d/%Y %H:%M:%S")  # noqa: DTZ007
             reservation_ids = (
                 request.env["pms.reservation"]
                 .sudo()
@@ -151,10 +149,11 @@ class WebsiteSale(WebsiteSale):
                 post["ppg"] = ppg
             except ValueError:
                 ppg = False
+        website = request.env.website
         if not ppg:
-            ppg = request.env["website"].get_current_website().shop_ppg or 20
+            ppg = website.shop_ppg or 20
 
-        ppr = request.env["website"].get_current_website().shop_ppr or 4
+        ppr = website.shop_ppr or 4
 
         domain = self._get_property_search_domain(
             search=search, category=category, guest=guest_select, args=post
@@ -164,9 +163,7 @@ class WebsiteSale(WebsiteSale):
 
         pricelist_context, pricelist = self._get_pricelist_context()
 
-        request.update_context(
-            pricelist=pricelist.id, partner=request.env.user.partner_id
-        )
+        request.update_context(**pricelist_context, partner=request.env.user.partner_id)
 
         Property = request.env["pms.property"].with_context(bin_size=True)
 
@@ -187,7 +184,7 @@ class WebsiteSale(WebsiteSale):
             url = f"/shop/category/{request.env['ir.http']._slug(category)}"
 
         product_count = len(search_property)
-        pager = request.website.pager(
+        pager = website.pager(
             url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post
         )
         offset = pager["offset"]
@@ -251,8 +248,8 @@ class PmsWebsiteSale(PmsPropertyWebsite):
         if not date_start or not date_end:
             return {"available": False, "error": "Missing dates"}
         try:
-            start = datetime.strptime(date_start, "%Y-%m-%d")
-            end = datetime.strptime(date_end, "%Y-%m-%d")
+            start = datetime.strptime(date_start, "%Y-%m-%d")  # noqa: DTZ007
+            end = datetime.strptime(date_end, "%Y-%m-%d")  # noqa: DTZ007
         except ValueError:
             return {"available": False, "error": "Invalid dates"}
         stage_new = request.env.ref("pms_sale.pms_stage_new", raise_if_not_found=False)
@@ -291,9 +288,8 @@ class PmsWebsiteSale(PmsPropertyWebsite):
         **kwargs,
     ):
         pms_property = request.env["pms.property"].sudo().browse(property_id)
-        if (
-            not pms_property.exists()
-            or not pms_property.can_access_from_current_website()
+        if not pms_property.exists() or (
+            pms_property.website_id and pms_property.website_id != request.env.website
         ):
             return {"error": "Property not found", "redirect": "/property"}
 
@@ -304,8 +300,8 @@ class PmsWebsiteSale(PmsPropertyWebsite):
             }
 
         try:
-            start = datetime.strptime(date_start or "", "%Y-%m-%d")
-            end = datetime.strptime(date_end or "", "%Y-%m-%d")
+            start = datetime.strptime(date_start or "", "%Y-%m-%d")  # noqa: DTZ007
+            end = datetime.strptime(date_end or "", "%Y-%m-%d")  # noqa: DTZ007
         except ValueError:
             return {"error": "Invalid dates"}
 
@@ -336,7 +332,7 @@ class PmsWebsiteSale(PmsPropertyWebsite):
             )
         )
         duration = (end - start).days
-        order = request.cart or request.website._create_cart()
+        order = request.cart or request.env.website._create_cart()
         request.env["sale.order.line"].sudo().create(
             {
                 "order_id": order.id,

@@ -1,8 +1,9 @@
 # Copyright (c) 2024 Gray Matter Logic
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import json
-from datetime import datetime, timedelta
+from datetime import timedelta
 
+from odoo import fields
 from odoo.tests import HttpCase, tagged
 
 
@@ -20,7 +21,7 @@ class TestPropertyBooking(HttpCase):
                 "no_of_guests": 4,
                 "min_nights": 1,
                 "max_nights": 30,
-                "website_published": True,
+                "is_published": True,
             }
         )
         cls.reservation_type = cls.env["pms.property.reservation"].create(
@@ -30,7 +31,7 @@ class TestPropertyBooking(HttpCase):
                 "property_id": cls.property.id,
             }
         )
-        today = datetime.now()
+        today = fields.Datetime.now()
         # Use distinct date ranges per test to avoid cross-test interference
         cls.dates_free = (
             (today + timedelta(days=30)).strftime("%Y-%m-%d"),
@@ -112,7 +113,7 @@ class TestPropertyBooking(HttpCase):
         reservation = self.env["pms.reservation"].search(
             [
                 ("property_id", "=", self.property.id),
-                ("start", "=", self.dates_cart[0]),
+                ("start", "=", fields.Datetime.to_datetime(self.dates_cart[0])),
             ],
             limit=1,
         )
