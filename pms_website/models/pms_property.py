@@ -8,7 +8,11 @@ from odoo.tools.translate import html_translate
 
 class PmsProperty(models.Model):
     _name = "pms.property"
-    _inherit = ["pms.property", "website.published.mixin", "website.multi.mixin"]
+    _inherit = [  # noqa: RUF012
+        "pms.property",
+        "website.published.mixin",
+        "website.multi.mixin",
+    ]
 
     def _compute_website_url(self):
         for pms_property in self:
