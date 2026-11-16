@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Stays run around the clock, so the demo resources are bookable at any
+         time instead of only during office hours. -->
+    <record id="resource_calendar_demo_open" model="resource.calendar">
+        <field name="name">Open 24/7</field>
+        <field name="company_id" ref="base.main_company" />
+        <field name="hours_per_day" eval="24" />
+        <field
+            name="attendance_ids"
+            eval="[(0, 0, {'name': 'Open', 'dayofweek': str(day), 'hour_from': 0, 'hour_to': 24}) for day in range(7)]"
+        />
+    </record>
+    <record id="resource_pitch_101" model="resource.resource">
+        <field name="name">Pitch 101</field>
+        <field name="resource_type">material</field>
+        <field name="calendar_id" ref="resource_calendar_demo_open" />
+    </record>
+    <record id="resource_pitch_201" model="resource.resource">
+        <field name="name">Pitch 201</field>
+        <field name="resource_type">material</field>
+        <field name="calendar_id" ref="resource_calendar_demo_open" />
+    </record>
+    <record id="resource_bungalow_10" model="resource.resource">
+        <field name="name">Bungalow 10</field>
+        <field name="resource_type">material</field>
+        <field name="calendar_id" ref="resource_calendar_demo_open" />
+    </record>
+    <record id="resource_tentalo_1" model="resource.resource">
+        <field name="name">Tentalo 1</field>
+        <field name="resource_type">material</field>
+        <field name="calendar_id" ref="resource_calendar_demo_open" />
+    </record>
+</odoo>

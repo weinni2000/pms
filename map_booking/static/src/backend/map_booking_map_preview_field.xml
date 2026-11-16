@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+    <t t-name="map_booking.MapBookingMapPreviewField">
+        <div class="o_map_widget_backend_preview o_map_widget_editor">
+            <div class="d-flex align-items-end gap-2 mb-3">
+                <!-- Only for a picked zone without an outline: an existing
+                     outline is edited on the map itself. -->
+                <button
+                    t-if="canStartNewPolygon"
+                    type="button"
+                    class="btn btn-success"
+                    t-on-click="startNewPolygon"
+                >
+                    New polygon<t t-if="selectedZoneName">: <t
+                    t-out="selectedZoneName"
+                /></t>
+                </button>
+                <div class="flex-grow-1">
+                    <label
+                        class="form-label"
+                        for="o_map_booking_zone_select"
+                    >Zone</label>
+                    <select
+                        id="o_map_booking_zone_select"
+                        class="form-select"
+                        t-on-change="onZoneChange"
+                    >
+                        <option value="">Select a zone...</option>
+                        <option
+                            t-foreach="state.zones"
+                            t-as="zone"
+                            t-key="zone.id"
+                            t-att-value="zone.id"
+                            t-att-selected="zone.id === state.selectedZoneId"
+                            t-out="zone.name"
+                        />
+                    </select>
+                </div>
+                <!-- A new outline is saved by clicking its first point again;
+                     changes to an existing one are saved as soon as a corner
+                     or the outline is dropped. -->
+                <button
+                    t-if="canClear"
+                    type="button"
+                    class="btn btn-secondary"
+                    t-on-click="onClearClick"
+                >Clear</button>
+                <div class="d-flex flex-column">
+                    <label
+                        class="form-label"
+                        for="o_map_booking_label_scale"
+                    >Label size</label>
+                    <input
+                        id="o_map_booking_label_scale"
+                        type="range"
+                        class="form-range"
+                        min="0.5"
+                        max="3"
+                        step="0.1"
+                        style="width: 130px;"
+                        t-att-value="labelScale"
+                        t-on-input="onLabelScaleChange"
+                    />
+                </div>
+            </div>
+            <p class="text-muted" t-if="state.drawing">
+                Click around the boundary of the zone, then click the first
+                point again to close and save it.
+            </p>
+            <MapWidget
+                t-if="mapImageUrl"
+                zones="state.shapes"
+                mapImageUrl="mapImageUrl"
+                editable="true"
+                draftPoints="draftPoints"
+                legend="legend"
+                legendPosition="legendPosition"
+                labelScale="labelScale"
+                onMapClick.bind="addPoint"
+                onRemoveZone.bind="removeZone"
+                onCloseDraft.bind="saveZone"
+                onCornersChanged.bind="onCornersChanged"
+                activeZoneId="state.selectedZoneId"
+                onActiveZoneChange.bind="selectZone"
+            />
+        </div>
+    </t>
+</templates>
