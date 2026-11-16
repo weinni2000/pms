@@ -170,7 +170,7 @@ class TestPmsAccountInvoice(AccountTestInvoicingCommon):
     def _link_move_lines(self, move, *properties):
         lines = move.invoice_line_ids
         for prop in properties:
-            prop.invoice_line_ids = [(4, line.id) for line in lines]
+            prop.invoice_line_ids = [Command.link(line.id) for line in lines]
 
     def test_invoice_count_with_out_invoice(self):
         move = self._create_move("out_invoice", self.customer)
