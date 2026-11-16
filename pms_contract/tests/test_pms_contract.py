@@ -202,7 +202,7 @@ class TestPmsContract(PmsBaseCase):
         contract = self._create_contract()
         line = contract.contract_line_ids
         vals = line._prepare_invoice_line()
-        self.assertEqual(vals["property_ids"], [(6, 0, self.property.ids)])
+        self.assertEqual(vals["property_ids"], [Command.set(self.property.ids)])
 
     def test_prepare_invoice_line_without_property(self):
         contract = self.env["contract.contract"].create(
