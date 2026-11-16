@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_map_booking_state_user,map.booking.state user,model_map_booking_state,base.group_user,1,0,0,0
+access_map_booking_state_manager,map.booking.state manager,model_map_booking_state,map_booking.group_map_booking_manager,1,1,1,1
+access_map_booking_map_user,map.booking.map user,model_map_booking_map,base.group_user,1,0,0,0
+access_map_booking_map_manager,map.booking.map manager,model_map_booking_map,map_booking.group_map_booking_manager,1,1,1,1
+access_map_booking_zone_user,map.booking.zone user,model_map_booking_zone,base.group_user,1,0,0,0
+access_map_booking_zone_manager,map.booking.zone manager,model_map_booking_zone,map_booking.group_map_booking_manager,1,1,1,1

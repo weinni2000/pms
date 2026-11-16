@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="map_booking_zone_view_list" model="ir.ui.view">
+        <field name="name">map.booking.zone.list</field>
+        <field name="model">map.booking.zone</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="code" />
+                <field name="symbol" />
+                <field name="map_id" />
+                <field name="active" invisible="1" />
+            </list>
+        </field>
+    </record>
+
+    <record id="map_booking_zone_view_form" model="ir.ui.view">
+        <field name="name">map.booking.zone.form</field>
+        <field name="model">map.booking.zone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="code" />
+                            <field name="symbol" />
+                            <field name="map_id" />
+                            <field name="sequence" />
+                            <field name="active" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="points" placeholder="x1,y1 x2,y2 x3,y3 ..." />
+                        </group>
+                    </group>
+                    <!-- Bridge modules add a page for their bookable units. -->
+                    <notebook />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="map_booking_zone_action" model="ir.actions.act_window">
+        <field name="name">Zones</field>
+        <field name="res_model">map.booking.zone</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="map_booking_zone_menu"
+        name="Zones"
+        action="map_booking_zone_action"
+        parent="map_booking_menu_root"
+        groups="map_booking.group_map_booking_manager"
+        sequence="20"
+    />
+</odoo>

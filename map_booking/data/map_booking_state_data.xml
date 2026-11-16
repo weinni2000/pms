@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="map_booking_state_free" model="map.booking.state">
+        <field name="name">Free</field>
+        <field name="code">free</field>
+        <field name="color">#198754</field>
+        <field name="stroke_color">#146c43</field>
+        <field name="hover_color">#22a06b</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="map_booking_state_occupied" model="map.booking.state">
+        <field name="name">Occupied</field>
+        <field name="code">occupied</field>
+        <!-- Salmon-pink, matching the color of booked records elsewhere. -->
+        <field name="color">#F58181</field>
+        <field name="stroke_color">#E06666</field>
+        <field name="hover_color">#F26D6D</field>
+        <field name="sequence">20</field>
+    </record>
+</odoo>
