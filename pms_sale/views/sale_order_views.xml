@@ -10,7 +10,8 @@
                     name="action_view_reservation_list"
                     type="object"
                     class="oe_stat_button"
-                    icon="fa-users"
+                    icon="group"
+                    icon_class="oi-filled"
                     invisible="reservation_count == 0"
                 >
                     <field

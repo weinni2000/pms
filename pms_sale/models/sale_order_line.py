@@ -1,6 +1,6 @@
 # Copyright (c) 2021 Gray Matter Logic
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -88,7 +88,9 @@ class SaleOrderLine(models.Model):
             result.update(
                 {
                     "pms_reservation_id": self.pms_reservation_id.id,
-                    "property_ids": [(6, 0, self.pms_reservation_id.property_id.ids)],
+                    "property_ids": [
+                        Command.set(self.pms_reservation_id.property_id.ids)
+                    ],
                 }
             )
         return result

@@ -1,10 +1,9 @@
 # Copyright (c) 2021 Gray Matter Logic
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
 
-import pytz
-
-from odoo import api, fields, models
+from odoo import Command, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
@@ -50,8 +49,8 @@ class PMSConfigurator(models.TransientModel):
         if self.guest_ids:
             self.no_of_guests = len(self.guest_ids)
 
-    product_id = fields.Many2one("product.product", string="Product", readonly=True)
-    property_id = fields.Many2one("pms.property", string="Property")
+    product_id = fields.Many2one("product.product", readonly=True)
+    property_id = fields.Many2one("pms.property")
     reservation_id = fields.Many2one(
         "pms.property.reservation", string="Reservation Type"
     )
@@ -78,7 +77,7 @@ class PMSConfigurator(models.TransientModel):
         "pms.reservation.guest.wizard", "configurator_id", string="Guests"
     )
     price = fields.Float(related="reservation_id.price", readonly=True)
-    currency_id = fields.Many2one("res.currency", string="Currency")
+    currency_id = fields.Many2one("res.currency")
     existing_reservation_id = fields.Integer()
     reservation_ids = fields.Many2many("pms.reservation")
     timeline_html = fields.Html("Timeline HTML", readonly=True)
@@ -98,13 +97,14 @@ class PMSConfigurator(models.TransientModel):
             domain += [("stop", ">", fields.Datetime.now())]
         if self.existing_reservation_id:
             domain += [("id", "!=", self.existing_reservation_id)]
-        self.reservation_ids = [(6, 0, self.env["pms.reservation"].search(domain).ids)]
+        self.reservation_ids = [
+            Command.set(self.env["pms.reservation"].search(domain).ids)
+        ]
 
     @api.onchange("property_id")
     def onchange_property_id(self):
         user_tz = self.env.user.tz or "UTC"
-        utc = pytz.timezone("UTC")
-        timezone = pytz.timezone(user_tz)
+        timezone = ZoneInfo(user_tz)
         if (
             self.property_id
             and self.start
@@ -120,10 +120,10 @@ class PMSConfigurator(models.TransientModel):
                     + " "
                     + str(timedelta(hours=self.property_id.checkin))
                 )
-                with_timezone = timezone.localize(
-                    datetime.strptime(start_datetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                )
-                start_datetime = with_timezone.astimezone(utc)
+                with_timezone = datetime.strptime(
+                    start_datetime, DEFAULT_SERVER_DATETIME_FORMAT
+                ).replace(tzinfo=timezone)
+                start_datetime = with_timezone.astimezone(UTC)
                 self.start = start_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
             if (
                 str(self.stop) != (self.env.context.get("default_stop") or "")
@@ -133,10 +133,10 @@ class PMSConfigurator(models.TransientModel):
                     + " "
                     + str(timedelta(hours=self.property_id.checkout))
                 )
-                with_timezone = timezone.localize(
-                    datetime.strptime(end_datetime, DEFAULT_SERVER_DATETIME_FORMAT)
-                )
-                end_datetime = with_timezone.astimezone(utc)
+                with_timezone = datetime.strptime(
+                    end_datetime, DEFAULT_SERVER_DATETIME_FORMAT
+                ).replace(tzinfo=timezone)
+                end_datetime = with_timezone.astimezone(UTC)
                 self.stop = end_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
         self._update_bookings_tab()
 
@@ -255,12 +255,12 @@ class PMSConfigurator(models.TransientModel):
             if existing_reservation_id:
                 domain += [("id", "!=", existing_reservation_id)]
             result["reservation_ids"] = [
-                (6, 0, self.env["pms.reservation"].search(domain).ids)
+                Command.set(self.env["pms.reservation"].search(domain).ids)
             ]
         ref_id = self.env.ref("pms_sale.action_sale_reservation")
         timeline_url = (
             "{}/web?#action={}&model=pms.reservation&view_type=schedule".format(
-                self.env["ir.config_parameter"].sudo().get_param("web.base.url"),
+                self.env["ir.config_parameter"].sudo().get_str("web.base.url"),
                 ref_id and str(ref_id.id) or "",
             )
         )
@@ -279,8 +279,8 @@ class PMSReservationGuestWizard(models.TransientModel):
     name = fields.Char(required=True)
     phone = fields.Char()
     email = fields.Char()
-    configurator_id = fields.Many2one("pms.configurator", string="Configurator")
-    partner_id = fields.Many2one("res.partner", string="Partner")
+    configurator_id = fields.Many2one("pms.configurator")
+    partner_id = fields.Many2one("res.partner")
 
     @api.onchange("partner_id")
     def _onchange_partner_id(self):

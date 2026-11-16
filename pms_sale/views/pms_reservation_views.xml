@@ -56,7 +56,7 @@
                             name="action_view_invoices"
                             type="object"
                             class="oe_stat_button"
-                            icon="fa-pencil-square-o"
+                            icon="edit_square"
                             groups="account.group_account_invoice"
                             invisible="('invoice_count', '=', 0)"
                         >
