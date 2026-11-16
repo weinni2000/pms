@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). -->
+<templates xml:space="preserve">
+    <t t-name="map_widget.MapWidget">
+        <div class="o_map_widget_root">
+            <div class="o_map_widget_overlay">
+                <!-- Sizes the map and reads the picture's own size; once known,
+                     the picture is drawn inside the SVG instead, in the same
+                     coordinate system as the zones, so both always line up. -->
+                <img
+                    t-att-src="props.mapImageUrl"
+                    t-att-class="'o_map_widget_img img-fluid' + (state.naturalWidth ? ' o_map_widget_img_sizer' : '')"
+                    t-ref="mapImage"
+                    t-on-load="onImageLoad"
+                    alt="Map"
+                />
+                <svg
+                    t-if="state.naturalWidth"
+                    class="o_map_widget_svg"
+                    t-ref="mapSvg"
+                    t-attf-viewBox="0 0 {{ state.naturalWidth }} {{ state.naturalHeight }}"
+                    preserveAspectRatio="xMidYMid meet"
+                    t-on-click="onMapClick"
+                >
+                    <image
+                        class="o_map_widget_svg_image"
+                        t-att-href="props.mapImageUrl"
+                        x="0"
+                        y="0"
+                        t-att-width="state.naturalWidth"
+                        t-att-height="state.naturalHeight"
+                    />
+                    <t
+                        t-if="!isDrafting"
+                        t-foreach="props.zones"
+                        t-as="zone"
+                        t-key="zone.id"
+                    >
+                        <polygon
+                            t-att-points="zonePointsString(zone)"
+                            t-att-class="zoneClass(zone)"
+                            t-att-style="zoneStyle(zone)"
+                            t-on-mouseenter="() => this.onZoneHover(zone.id)"
+                            t-on-mouseleave="() => this.onZoneHover(null)"
+                            t-on-click="(ev) => this.onZoneClick(zone, ev)"
+                            t-on-pointerdown="(ev) => this.onZonePointerDown(zone, ev)"
+                            t-on-pointermove="(ev) => this.onZonePointerMove(zone, ev)"
+                            t-on-pointerup="(ev) => this.onZonePointerUp(zone, ev)"
+                        />
+                        <g
+                            t-if="props.editable and props.onRemoveZone"
+                            class="o_map_widget_zone_remove"
+                            t-att-transform="'translate(' + zoneTopRight(zone).x + ',' + zoneTopRight(zone).y + ')'"
+                            t-on-click.stop="() => this.onRemoveZoneClick(zone)"
+                        >
+                            <title>Remove polygon</title>
+                            <circle r="12" />
+                            <line x1="-5" y1="-5" x2="5" y2="5" />
+                            <line x1="-5" y1="5" x2="5" y2="-5" />
+                        </g>
+                        <foreignObject
+                            t-if="zone.code"
+                            t-att-x="zoneMarkerBox(zone).x"
+                            t-att-y="zoneMarkerBox(zone).y"
+                            t-att-width="zoneMarkerBox(zone).width"
+                            t-att-height="zoneMarkerBox(zone).height"
+                            class="o_map_widget_zone_marker"
+                        >
+                            <div
+                                xmlns="http://www.w3.org/1999/xhtml"
+                                class="o_map_widget_zone_marker_badge"
+                                t-attf-style="--o-label-font: {{ labelFontPx }}px"
+                            >
+                                <i
+                                    t-if="zone.symbol"
+                                    t-attf-class="fa {{ zone.symbol }}"
+                                />
+                                <span t-out="zone.code" />
+                            </div>
+                        </foreignObject>
+                        <!-- How many items the user has picked in this zone. -->
+                        <g
+                            t-if="props.onSelectItem and selectedCountForZone(zone)"
+                            class="o_map_widget_zone_counter"
+                            t-att-transform="'translate(' + zoneTopRight(zone).x + ',' + zoneTopRight(zone).y + ')'"
+                        >
+                            <circle r="13" />
+                            <text
+                                text-anchor="middle"
+                                dominant-baseline="central"
+                                t-out="selectedCountForZone(zone)"
+                            />
+                        </g>
+                    </t>
+                    <t t-if="props.editable and state.editZoneId">
+                        <line
+                            t-foreach="state.editPoints"
+                            t-as="corner"
+                            t-key="'edge-' + corner_index"
+                            class="o_map_widget_edge"
+                            t-att-x1="corner[0]"
+                            t-att-y1="corner[1]"
+                            t-att-x2="state.editPoints[(corner_index + 1) % state.editPoints.length][0]"
+                            t-att-y2="state.editPoints[(corner_index + 1) % state.editPoints.length][1]"
+                            t-on-click="(ev) => this.insertCorner(corner_index, ev)"
+                        />
+                        <circle
+                            t-foreach="state.editPoints"
+                            t-as="corner"
+                            t-key="corner_index"
+                            class="o_map_widget_corner"
+                            t-att-cx="corner[0]"
+                            t-att-cy="corner[1]"
+                            r="9"
+                            t-on-pointerdown="(ev) => this.onCornerPointerDown(corner_index, ev)"
+                            t-on-pointermove="(ev) => this.onCornerPointerMove(corner_index, ev)"
+                            t-on-pointerup="(ev) => this.onCornerPointerUp(corner_index, ev)"
+                            t-on-dblclick="(ev) => this.removeCorner(corner_index, ev)"
+                        />
+                    </t>
+                    <polyline
+                        t-if="props.draftPoints"
+                        t-att-points="props.draftPoints"
+                        class="o_map_widget_zone_draft"
+                    />
+                    <g
+                        t-if="props.draftPoints and props.onCloseDraft and draftStartPoint"
+                        class="o_map_widget_draft_close"
+                        t-on-click.stop="onCloseDraftClick"
+                    >
+                        <title>Close and save the zone</title>
+                        <circle
+                            t-att-cx="draftStartPoint[0]"
+                            t-att-cy="draftStartPoint[1]"
+                            r="8"
+                        />
+                        <circle
+                            t-att-cx="draftStartPoint[0]"
+                            t-att-cy="draftStartPoint[1]"
+                            r="3"
+                            class="o_map_widget_draft_close_dot"
+                        />
+                    </g>
+                </svg>
+                <div
+                    t-if="showLegend"
+                    t-att-class="legendClass"
+                    t-att-style="legendStyle"
+                >
+                    <div
+                        t-foreach="props.legend"
+                        t-as="entry"
+                        t-key="entry_index"
+                        class="o_map_widget_legend_item"
+                    >
+                        <span
+                            t-attf-class="o_map_widget_legend_swatch {{ entry.color_class or '' }}"
+                            t-att-style="entry.color ? ('background-color: ' + entry.color) : undefined"
+                        />
+                        <span t-out="entry.label" />
+                    </div>
+                </div>
+                <div
+                    t-if="hoveredZone"
+                    class="o_map_widget_tooltip"
+                    t-out="hoveredZone.name"
+                />
+                <div t-if="selectedZone" class="o_map_widget_panel">
+                    <div class="o_map_widget_panel_header">
+                        <h4 t-out="selectedZone.name" />
+                        <button
+                            type="button"
+                            class="btn-close"
+                            aria-label="Close"
+                            t-on-click="closePanel"
+                        />
+                    </div>
+                    <div class="o_map_widget_panel_body">
+                        <t t-if="selectedZone.items and selectedZone.items.length">
+                            <t
+                                t-foreach="selectedZone.items"
+                                t-as="item"
+                                t-key="item.id"
+                            >
+                                <a
+                                    t-if="item.url"
+                                    t-att-href="item.url"
+                                    class="o_map_widget_item_link"
+                                >
+                                    <span t-out="item.name" />
+                                </a>
+                                <button
+                                    t-elif="props.onSelectItem"
+                                    type="button"
+                                    t-att-class="itemClass(item)"
+                                    t-att-disabled="!item.selectable"
+                                    t-on-click="() => this.onItemClick(item)"
+                                >
+                                    <span t-out="item.name" />
+                                    <small
+                                        t-if="item.state_label"
+                                        class="d-block opacity-75"
+                                        t-out="item.state_label"
+                                    />
+                                </button>
+                                <div t-else="" class="o_map_widget_item_link">
+                                    <span t-out="item.name" />
+                                </div>
+                            </t>
+                        </t>
+                        <p t-else="" class="text-muted mb-0">
+                            No items in this zone yet.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <!-- Chosen items with a remove (x) control; removing one updates the
+                 map counter/highlight straight away. Kept outside
+                 .o_map_widget_overlay: that container is position:relative and
+                 the SVG stretches to its full height via inset:0, so growing
+                 its content would move the overlay out of the image's box. -->
+            <div
+                t-if="props.onSelectItem and selectedItems.length"
+                class="o_map_widget_selected"
+            >
+                <span
+                    t-foreach="selectedItems"
+                    t-as="item"
+                    t-key="item.id"
+                    class="o_map_widget_selected_chip"
+                >
+                    <span t-out="item.name" />
+                    <button
+                        type="button"
+                        class="btn-close"
+                        aria-label="Remove item"
+                        t-on-click="() => this.removeItem(item.id)"
+                    />
+                </span>
+            </div>
+        </div>
+    </t>
+</templates>
