@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Flat 1 is occupied today. -->
+    <record id="pms_reservation_demo_flat_1" model="pms.reservation">
+        <field name="property_id" ref="pms_property_demo_flat_1" />
+        <field
+            name="start"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="stop"
+            eval="(datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="partner_id" ref="pms_sale.demo_guest_alice" />
+        <field name="stage_id" ref="pms_sale.pms_stage_confirmed" />
+    </record>
+    <!-- Half of the dormitory beds are taken today, so the room stays free. -->
+    <record id="pms_reservation_demo_dormitory_bed_1" model="pms.reservation">
+        <field name="property_id" ref="pms_property_demo_dormitory_bed_1" />
+        <field
+            name="start"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="stop"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="partner_id" ref="pms_sale.demo_guest_bob" />
+        <field name="stage_id" ref="pms_sale.pms_stage_confirmed" />
+    </record>
+    <!-- Dormitory bed 2 is taken today. -->
+    <record id="pms_reservation_demo_dormitory_bed_2" model="pms.reservation">
+        <field name="property_id" ref="pms_property_demo_dormitory_bed_2" />
+        <field
+            name="start"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="stop"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="partner_id" ref="pms_sale.demo_guest_bob" />
+        <field name="stage_id" ref="pms_sale.pms_stage_confirmed" />
+    </record>
+    <!-- Dormitory bed 3 is taken today. -->
+    <record id="pms_reservation_demo_dormitory_bed_3" model="pms.reservation">
+        <field name="property_id" ref="pms_property_demo_dormitory_bed_3" />
+        <field
+            name="start"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="stop"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="partner_id" ref="pms_sale.demo_guest_carol" />
+        <field name="stage_id" ref="pms_sale.pms_stage_confirmed" />
+    </record>
+</odoo>
