@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+    <t t-name="map_booking_hotel_reservation.MapField">
+        <div class="o_map_widget_backend_preview mb-3" t-if="mapData.image_url">
+            <t t-set="map" t-value="mapState" />
+            <MapWidget
+                t-key="map.key"
+                zones="mapData.shapes or []"
+                mapImageUrl="mapData.image_url"
+                legend="mapData.legend or []"
+                legendPosition="mapData.legend_position or 'none'"
+                labelScale="mapData.label_scale or 1"
+                selectedItemIds="map.roomIds"
+                onSelectItem="isReadonly ? undefined : onSelectRooms.bind(this)"
+            />
+            <t t-set="summary" t-value="capacitySummary" />
+            <div class="o_map_booking_hotel_reservation_summary mt-2">
+                <span class="me-3" t-out="summary.rooms" />
+                <span
+                    t-att-class="summary.enough ? 'text-success' : 'text-danger'"
+                    t-out="summary.guests"
+                />
+            </div>
+        </div>
+    </t>
+    <!-- How many guests the rooms of a zone hold, under its code. The badge
+         div is in the XHTML namespace, so plain `div`/`span` steps would not
+         match it: select it with `*`. -->
+    <t t-inherit="map_widget.MapWidget" t-inherit-mode="extension">
+        <xpath
+            expr="//*[hasclass('o_map_widget_zone_marker_badge')]/*[@t-out='zone.code']"
+            position="after"
+        >
+            <small
+                xmlns="http://www.w3.org/1999/xhtml"
+                t-if="zone.caption"
+                class="o_map_widget_zone_marker_caption"
+                t-out="zone.caption"
+            />
+        </xpath>
+    </t>
+</templates>

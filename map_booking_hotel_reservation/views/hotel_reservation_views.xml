@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_hotel_reservation_form" model="ir.ui.view">
+        <field name="name">hotel.reservation.form</field>
+        <field name="model">hotel.reservation</field>
+        <field name="inherit_id" ref="hotel_reservation.view_hotel_reservation_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='reservation_line']/field[@name='reservation_line']"
+                position="before"
+            >
+                <group>
+                    <field
+                        name="map_booking_map_calculated_id"
+                        readonly="state != 'draft'"
+                    />
+                </group>
+                <field name="map_booking_room_ids_calculated" invisible="1" />
+                <field name="map_booking_room_count_calculated" invisible="1" />
+                <field name="map_booking_capacity_calculated" invisible="1" />
+                <field
+                    name="map_booking_data_calculated"
+                    widget="map_booking_hotel_reservation_map"
+                    nolabel="1"
+                    readonly="state != 'draft'"
+                    invisible="not map_booking_map_calculated_id"
+                />
+            </xpath>
+        </field>
+    </record>
+</odoo>
