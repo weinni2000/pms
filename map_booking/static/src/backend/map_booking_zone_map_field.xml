@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+    <t t-name="map_booking.MapBookingZoneMapField">
+        <div class="o_map_widget_backend_preview">
+            <MapWidget
+                t-if="mapImageUrl"
+                zones="shapes"
+                mapImageUrl="mapImageUrl"
+                legend="legend"
+                legendPosition="legendPosition"
+                labelScale="labelScale"
+            />
+            <p t-else="" class="text-muted mb-0">
+                Upload a map image and set the stay period to preview the
+                availability of its zones here.
+            </p>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Put the PMS demo properties on the default demo map. With the pms_sale
+         demo reservations, the "Availability" tab shows the Suburban House
+         zone occupied today and the Downtown Apartment zone booked next week. -->
+    <record id="map_booking.map_booking_zone_demo_bungalow_10" model="map.booking.zone">
+        <field
+            name="property_ids"
+            eval="[(6, 0, [ref('pms_base.demo_property_downtown')])]"
+        />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_tentalo_1" model="map.booking.zone">
+        <field
+            name="property_ids"
+            eval="[(6, 0, [ref('pms_base.demo_property_suburban')])]"
+        />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_flat_1" model="map.booking.zone">
+        <field name="property_ids" eval="[(6, 0, [ref('pms_property_demo_flat_1')])]" />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_flat_2" model="map.booking.zone">
+        <field name="property_ids" eval="[(6, 0, [ref('pms_property_demo_flat_2')])]" />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_dormitory" model="map.booking.zone">
+        <field
+            name="property_ids"
+            eval="[(6, 0, [
+                ref('pms_property_demo_dormitory_bed_1'),
+                ref('pms_property_demo_dormitory_bed_2'),
+                ref('pms_property_demo_dormitory_bed_3'),
+                ref('pms_property_demo_dormitory_bed_4'),
+                ref('pms_property_demo_dormitory_bed_5'),
+                ref('pms_property_demo_dormitory_bed_6'),
+            ])]"
+        />
+    </record>
+</odoo>

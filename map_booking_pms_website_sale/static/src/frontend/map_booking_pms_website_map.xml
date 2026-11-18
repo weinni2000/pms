@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+    <t t-name="map_booking_pms_website_sale.PmsWebsiteMap">
+        <div t-if="state.data.image_url" class="o_map_booking_pms_website_map_body">
+            <MapWidget
+                t-key="state.key"
+                zones="state.data.shapes or []"
+                mapImageUrl="state.data.image_url"
+                legend="state.data.legend or []"
+                legendPosition="state.data.legend_position or 'none'"
+                labelScale="state.data.label_scale or 1"
+                selectedItemIds="[props.propertyId]"
+                onSelectItem.bind="onSelectItems"
+            />
+        </div>
+    </t>
+</templates>

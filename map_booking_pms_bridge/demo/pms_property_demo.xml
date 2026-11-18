@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- The three properties of the holiday home on the "Holiday Home" demo
+         map. The dormitory is let bed by bed: each bed is a property of its
+         own under the dormitory. -->
+    <record id="pms_property_demo_flat_1" model="pms.property">
+        <field name="name">Holiday Home - Flat 1</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_flat_2" model="pms.property">
+        <field name="name">Holiday Home - Flat 2</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory" model="pms.property">
+        <field name="name">Holiday Home - Dormitory</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_1" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 1</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_2" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 2</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_3" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 3</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_4" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 4</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_5" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 5</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+    <record id="pms_property_demo_dormitory_bed_6" model="pms.property">
+        <field name="name">Holiday Home - Dormitory Bed 6</field>
+        <field name="owner_id" ref="pms_base.demo_partner_owner" />
+        <field name="company_id" ref="base.main_company" />
+        <field name="team_id" ref="pms_base.pms_team_default" />
+        <field name="parent_id" ref="pms_property_demo_dormitory" />
+        <field name="tz">Europe/Vienna</field>
+        <field name="checkin">15.0</field>
+        <field name="checkout">10.0</field>
+        <field name="no_of_guests">2</field>
+        <field name="min_nights">1</field>
+        <field name="max_nights">30</field>
+    </record>
+</odoo>

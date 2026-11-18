@@ -1,0 +1,349 @@
+/* Copyright 2026 mytime.click
+   License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl). */
+
+.o_map_widget_root {
+    position: relative;
+}
+
+.o_map_widget_overlay {
+    position: relative;
+    width: fit-content;
+    max-width: 100%;
+    margin-inline: auto;
+}
+
+.o_map_widget_img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+// Keeps its place in the layout but leaves the drawing to the SVG.
+.o_map_widget_img_sizer {
+    visibility: hidden;
+}
+
+.o_map_widget_svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.o_map_widget_svg_image {
+    pointer-events: none;
+}
+
+// Backend previews target close to the full window height: let the map grow
+// past the form width instead of being squashed back down, with its own
+// scrollbar so the rest of the form layout isn't blown out.
+.o_map_widget_backend_preview {
+    overflow-x: auto;
+
+    .o_map_widget_overlay,
+    .o_map_widget_img {
+        max-width: none;
+    }
+
+    .o_map_widget_svg {
+        cursor: crosshair;
+    }
+}
+
+.o_map_widget_legend {
+    position: absolute;
+    z-index: 2;
+    // Never cover more than 30% of the map width.
+    max-width: 30%;
+    display: flex;
+    flex-direction: column;
+    // Sized in em so the whole legend scales with the font-size that the
+    // component sets from the rendered map width (see MapWidget.legendStyle).
+    gap: 0.35em;
+    padding: 0.6em 0.75em;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 0.5em;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+    font-size: 12px; // fallback; overridden inline with the scaled size
+    line-height: 1.2;
+    color: #333;
+    pointer-events: none;
+}
+
+.o_map_widget_legend_top_left {
+    top: 8px;
+    left: 8px;
+}
+
+.o_map_widget_legend_top_right {
+    top: 8px;
+    right: 8px;
+}
+
+.o_map_widget_legend_bottom_left {
+    bottom: 8px;
+    left: 8px;
+}
+
+.o_map_widget_legend_bottom_right {
+    bottom: 8px;
+    right: 8px;
+}
+
+.o_map_widget_legend_item {
+    display: flex;
+    // Long labels wrap under, keeping the legend within its 30% cap.
+    align-items: flex-start;
+    gap: 0.5em;
+}
+
+.o_map_widget_legend_swatch {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    margin-top: 0.05em;
+    border-radius: 0.25em;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+}
+
+// Zone colors are driven by the consumer's state records: the widget sets
+// --o-zone-fill / --o-zone-stroke / --o-zone-hover inline per zone (see
+// MapWidget.zoneStyle). The values below are only fallbacks used when a zone
+// carries no availability state (e.g. the plain editor preview).
+.o_map_widget_zone {
+    fill: var(--o-zone-fill, rgba(0, 128, 0, 0.15));
+    stroke: var(--o-zone-stroke, rgba(0, 128, 0, 0.6));
+    stroke-width: 3;
+    cursor: pointer;
+    transition: fill 0.15s ease-in-out;
+}
+
+.o_map_widget_zone_hover {
+    fill: var(--o-zone-hover, rgba(0, 128, 0, 0.35));
+}
+
+.o_map_widget_zone_selected {
+    fill: var(--o-zone-hover, rgba(0, 128, 0, 0.5));
+    stroke-width: 5;
+}
+
+// A zone without anything selectable is greyed out and non-interactive so it
+// can't be picked by mistake.
+.o_map_widget_zone_disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+// The chosen zone: solid radiant gold with a glow. Every other zone keeps its
+// own availability colour. A solid fill (rather than an SVG gradient
+// referenced by url(#id)) is used on purpose: website pages carry a
+// <base href> tag, and browsers resolve a stylesheet's url(#id) against that
+// base URL instead of the inline SVG, so a gradient fill renders transparent.
+.o_map_widget_zone.o_map_widget_zone_gold {
+    fill: #f5c518;
+    fill-opacity: 1;
+    stroke: #b8860b;
+    stroke-width: 5;
+    filter: drop-shadow(0 0 6px rgba(245, 197, 24, 0.95));
+}
+
+// Small badge on a zone showing how many items were picked there.
+.o_map_widget_zone_counter {
+    pointer-events: none;
+
+    circle {
+        fill: #b8860b;
+        stroke: #fff;
+        stroke-width: 2;
+    }
+
+    text {
+        fill: #fff;
+        font-weight: 700;
+        font-size: 15px;
+    }
+}
+
+// Chips listing the chosen items, each with a remove (x) control.
+.o_map_widget_selected {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.o_map_widget_selected_chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.6rem;
+    background: #f5c518;
+    color: #3a2f00;
+    border-radius: 1rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    .btn-close {
+        font-size: 0.55rem;
+        padding: 0.25rem;
+    }
+}
+
+.o_map_widget_zone_marker {
+    overflow: visible;
+    pointer-events: none;
+}
+
+.o_map_widget_zone_marker_badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    // Font size is driven by the label-size slider (see MapWidget.labelFontPx);
+    // 11px is the fallback when no scale is supplied.
+    font-size: var(--o-label-font, 11px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #333;
+    text-align: center;
+    text-shadow:
+        0 0 3px rgba(255, 255, 255, 0.9),
+        0 0 3px rgba(255, 255, 255, 0.9);
+
+    .fa {
+        font-size: calc(var(--o-label-font, 11px) * 1.27);
+        margin-bottom: 2px;
+    }
+}
+
+.o_map_widget_zone_draft {
+    fill: rgba(13, 110, 253, 0.2);
+    stroke: rgb(13, 110, 253);
+    stroke-width: 4;
+    stroke-dasharray: 10 6;
+    pointer-events: none;
+}
+
+.o_map_widget_draft_close {
+    cursor: pointer;
+
+    circle {
+        fill: #0d6efd;
+        stroke: #fff;
+        stroke-width: 2;
+        transition: fill 0.15s ease-in-out;
+    }
+
+    .o_map_widget_draft_close_dot {
+        fill: #fff;
+        stroke: none;
+    }
+
+    &:hover circle {
+        fill: #0b5ed7;
+    }
+}
+
+// In the zone editor, make every zone clearly visible (not near-transparent)
+// so it can be seen and clicked. Scoped to the editor so an editor that also
+// previews availability colors is left untouched.
+.o_map_widget_editor {
+    .o_map_widget_zone {
+        fill: rgba(13, 110, 253, 0.45);
+        stroke: #0d6efd;
+        stroke-width: 3;
+        cursor: pointer;
+    }
+
+    .o_map_widget_zone_hover {
+        fill: rgba(13, 110, 253, 0.6);
+    }
+
+    .o_map_widget_zone_editing {
+        fill: rgba(13, 110, 253, 0.7);
+        stroke: #0a58ca;
+        stroke-width: 4;
+        cursor: move;
+    }
+
+    // The zone picked in the editor stands out from all the others.
+    .o_map_widget_zone_active {
+        fill: rgba($warning, 0.6);
+        stroke: darken($warning, 25%);
+        stroke-width: 5;
+    }
+
+    .o_map_widget_zone_moving {
+        cursor: grabbing;
+    }
+}
+
+// Draggable corner handles for the zone being edited.
+.o_map_widget_corner {
+    fill: #fff;
+    stroke: #0d6efd;
+    stroke-width: 2;
+    cursor: move;
+
+    &:hover {
+        fill: #cfe2ff;
+    }
+}
+
+// Invisible, wide hit-area along each edge of the zone being edited.
+// Clicking it inserts a new corner at that spot.
+.o_map_widget_edge {
+    stroke: transparent;
+    stroke-width: 16;
+    pointer-events: stroke;
+    cursor: copy;
+}
+
+.o_map_widget_tooltip {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(0, 0, 0, 0.75);
+    color: #fff;
+    border-radius: 0.25rem;
+    pointer-events: none;
+}
+
+.o_map_widget_panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    max-width: 90%;
+    background: #fff;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.o_map_widget_panel_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.o_map_widget_item_link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+        color: var(--bs-primary);
+    }
+}

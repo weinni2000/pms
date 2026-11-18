@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="map_booking_zone_demo_101" model="map.booking.zone">
+        <field name="name">Pitch 101</field>
+        <field name="code">101</field>
+        <field name="symbol">fa-truck</field>
+        <field name="map_id" ref="map_booking_map_demo" />
+        <field name="sequence">10</field>
+        <field name="points">295,48 378,45 380,92 297,95</field>
+        <field name="resource_ids" eval="[(6, 0, [ref('resource_pitch_101')])]" />
+    </record>
+    <record id="map_booking_zone_demo_201" model="map.booking.zone">
+        <field name="name">Pitch 201</field>
+        <field name="code">201</field>
+        <field name="symbol">fa-truck</field>
+        <field name="map_id" ref="map_booking_map_demo" />
+        <field name="sequence">20</field>
+        <field name="points">230,150 303,148 305,197 232,199</field>
+        <field name="resource_ids" eval="[(6, 0, [ref('resource_pitch_201')])]" />
+    </record>
+    <record id="map_booking_zone_demo_bungalow_10" model="map.booking.zone">
+        <field name="name">Bungalow 10</field>
+        <field name="code">B10</field>
+        <field name="symbol">fa-home</field>
+        <field name="map_id" ref="map_booking_map_demo" />
+        <field name="sequence">30</field>
+        <field name="points">550,257 635,255 637,300 552,302</field>
+        <field name="resource_ids" eval="[(6, 0, [ref('resource_bungalow_10')])]" />
+    </record>
+    <record id="map_booking_zone_demo_tentalo_1" model="map.booking.zone">
+        <field name="name">Tentalo 1</field>
+        <field name="code">T1</field>
+        <field name="symbol">fa-home</field>
+        <field name="map_id" ref="map_booking_map_demo" />
+        <field name="sequence">40</field>
+        <field name="points">218,440 283,438 285,478 220,480</field>
+        <field name="resource_ids" eval="[(6, 0, [ref('resource_tentalo_1')])]" />
+    </record>
+    <record id="map_booking_zone_demo_flat_1" model="map.booking.zone">
+        <field name="name">Flat 1</field>
+        <field name="code">F1</field>
+        <field name="symbol">fa-home</field>
+        <field name="map_id" ref="map_booking_map_demo_holiday_home" />
+        <field name="sequence">10</field>
+        <field name="points">135,563 665,563 665,965 135,965</field>
+    </record>
+    <record id="map_booking_zone_demo_flat_2" model="map.booking.zone">
+        <field name="name">Flat 2</field>
+        <field name="code">F2</field>
+        <field name="symbol">fa-home</field>
+        <field name="map_id" ref="map_booking_map_demo_holiday_home" />
+        <field name="sequence">20</field>
+        <field name="points">135,100 665,100 665,548 135,548</field>
+    </record>
+    <!-- One room, several bookable beds: it stays free until all are booked. -->
+    <record id="map_booking_zone_demo_dormitory" model="map.booking.zone">
+        <field name="name">Dormitory</field>
+        <field name="code">D</field>
+        <field name="symbol">fa-home</field>
+        <field name="map_id" ref="map_booking_map_demo_holiday_home" />
+        <field name="sequence">30</field>
+        <field name="points">787,100 1362,100 1362,505 787,505</field>
+    </record>
+</odoo>
