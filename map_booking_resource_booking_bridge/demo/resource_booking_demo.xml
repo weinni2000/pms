@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- A booking starting tomorrow, so the demo map shows a booked pitch next
+         to the free ones on its "Availability" tab. -->
+    <record id="resource_booking_type_demo_stay" model="resource.booking.type">
+        <field name="name">Stay</field>
+        <field name="duration">0.5</field>
+        <field name="slot_duration">0.5</field>
+        <field
+            name="resource_calendar_id"
+            ref="map_booking.resource_calendar_demo_open"
+        />
+    </record>
+    <record
+        id="resource_booking_combination_demo_pitch_101"
+        model="resource.booking.combination"
+    >
+        <field
+            name="resource_ids"
+            eval="[(6, 0, [ref('map_booking.resource_pitch_101')])]"
+        />
+    </record>
+    <record id="resource_booking_demo_pitch_101" model="resource.booking">
+        <field name="type_id" ref="resource_booking_type_demo_stay" />
+        <field
+            name="combination_id"
+            ref="resource_booking_combination_demo_pitch_101"
+        />
+        <field name="combination_auto_assign" eval="False" />
+        <field name="partner_ids" eval="[(6, 0, [ref('base.main_partner')])]" />
+        <field
+            name="start"
+            eval="(datetime.now() + timedelta(days=1)).replace(hour=14, minute=0, second=0, microsecond=0)"
+        />
+        <field name="duration" eval="72.0" />
+    </record>
+</odoo>
