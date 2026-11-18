@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <template
+        id="property_booking_form"
+        inherit_id="pms_website_sale.property_booking_form"
+        name="Property Booking Form: Map"
+    >
+        <xpath expr="//form[@id='pmsBookingForm']/div[1]" position="before">
+            <div
+                t-if="map_booking_map"
+                class="mb-3 o_map_booking_pms_website_map"
+                t-att-data-property-id="property.id"
+            >
+                <label class="form-label">Map</label>
+                <div class="o_map_booking_pms_website_map_mount" />
+                <small class="form-text text-muted">
+                    Click another free place on the map to book it instead.
+                </small>
+            </div>
+        </xpath>
+    </template>
+</odoo>
