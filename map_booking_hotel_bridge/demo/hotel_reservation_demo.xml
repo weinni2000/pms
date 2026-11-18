@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Flat 1 is occupied today. -->
+    <record id="hotel_reservation_demo_flat_1" model="hotel.reservation">
+        <field
+            name="date_order"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 08:00:00')"
+        />
+        <field
+            name="checkin"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="checkout"
+            eval="(datetime.now() + timedelta(days=3)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="pricelist_id" ref="website_sale.list_europe" />
+        <field name="partner_id" ref="base.res_partner_2" />
+        <field name="partner_invoice_id" ref="base.res_partner_2" />
+        <field name="partner_shipping_id" ref="base.res_partner_2" />
+        <field name="adults">1</field>
+        <field
+            name="reservation_line"
+            eval="[(0, 0, {
+                'categ_id': ref('hotel_room_type_demo_holiday_home'),
+                'reserve': [(6, 0, [ref('hotel_room_demo_flat_1')])],
+            })]"
+        />
+    </record>
+    <!-- Half of the dormitory beds are taken today, so the room stays free. -->
+    <record id="hotel_reservation_demo_dormitory_bed_1" model="hotel.reservation">
+        <field
+            name="date_order"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 08:00:00')"
+        />
+        <field
+            name="checkin"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="checkout"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="pricelist_id" ref="website_sale.list_europe" />
+        <field name="partner_id" ref="base.res_partner_3" />
+        <field name="partner_invoice_id" ref="base.res_partner_3" />
+        <field name="partner_shipping_id" ref="base.res_partner_3" />
+        <field name="adults">1</field>
+        <field
+            name="reservation_line"
+            eval="[(0, 0, {
+                'categ_id': ref('hotel_room_type_demo_dormitory_bed'),
+                'reserve': [(6, 0, [ref('hotel_room_demo_dormitory_bed_1')])],
+            })]"
+        />
+    </record>
+    <!-- Dormitory bed 2 is taken today. -->
+    <record id="hotel_reservation_demo_dormitory_bed_2" model="hotel.reservation">
+        <field
+            name="date_order"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 08:00:00')"
+        />
+        <field
+            name="checkin"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="checkout"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="pricelist_id" ref="website_sale.list_europe" />
+        <field name="partner_id" ref="base.res_partner_3" />
+        <field name="partner_invoice_id" ref="base.res_partner_3" />
+        <field name="partner_shipping_id" ref="base.res_partner_3" />
+        <field name="adults">1</field>
+        <field
+            name="reservation_line"
+            eval="[(0, 0, {
+                'categ_id': ref('hotel_room_type_demo_dormitory_bed'),
+                'reserve': [(6, 0, [ref('hotel_room_demo_dormitory_bed_2')])],
+            })]"
+        />
+    </record>
+    <!-- Dormitory bed 3 is taken today. -->
+    <record id="hotel_reservation_demo_dormitory_bed_3" model="hotel.reservation">
+        <field
+            name="date_order"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 08:00:00')"
+        />
+        <field
+            name="checkin"
+            eval="(datetime.now() + timedelta(days=-1)).strftime('%Y-%m-%d 15:00:00')"
+        />
+        <field
+            name="checkout"
+            eval="(datetime.now() + timedelta(days=2)).strftime('%Y-%m-%d 10:00:00')"
+        />
+        <field name="pricelist_id" ref="website_sale.list_europe" />
+        <field name="partner_id" ref="base.res_partner_4" />
+        <field name="partner_invoice_id" ref="base.res_partner_4" />
+        <field name="partner_shipping_id" ref="base.res_partner_4" />
+        <field name="adults">1</field>
+        <field
+            name="reservation_line"
+            eval="[(0, 0, {
+                'categ_id': ref('hotel_room_type_demo_dormitory_bed'),
+                'reserve': [(6, 0, [ref('hotel_room_demo_dormitory_bed_3')])],
+            })]"
+        />
+    </record>
+    <!-- A reservation only books its rooms once confirmed. -->
+    <function model="hotel.reservation" name="confirmed_reservation">
+        <value
+            eval="[
+                ref('hotel_reservation_demo_flat_1'),
+                ref('hotel_reservation_demo_dormitory_bed_1'),
+                ref('hotel_reservation_demo_dormitory_bed_2'),
+                ref('hotel_reservation_demo_dormitory_bed_3'),
+            ]"
+        />
+    </function>
+</odoo>

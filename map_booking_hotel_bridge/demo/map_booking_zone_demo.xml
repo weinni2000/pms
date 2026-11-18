@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Put the hotel demo rooms on the default demo map. With the
+         hotel_reservation demo reservation, Single-101 in the Tentalo 1 zone
+         is requested for tomorrow (confirm it to see the zone turn occupied). -->
+    <record id="map_booking.map_booking_zone_demo_bungalow_10" model="map.booking.zone">
+        <field name="room_ids" eval="[(6, 0, [ref('hotel.hotel_room_3')])]" />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_tentalo_1" model="map.booking.zone">
+        <field name="room_ids" eval="[(6, 0, [ref('hotel.hotel_room_0')])]" />
+    </record>
+    <!-- The holiday home: the flats are picked one by one, the dormitory holds
+         every room of the "Dormitory Bed" type. -->
+    <record id="map_booking.map_booking_zone_demo_flat_1" model="map.booking.zone">
+        <field name="room_ids" eval="[(6, 0, [ref('hotel_room_demo_flat_1')])]" />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_flat_2" model="map.booking.zone">
+        <field name="room_ids" eval="[(6, 0, [ref('hotel_room_demo_flat_2')])]" />
+    </record>
+    <record id="map_booking.map_booking_zone_demo_dormitory" model="map.booking.zone">
+        <field
+            name="room_type_ids"
+            eval="[(6, 0, [ref('hotel_room_type_demo_dormitory_bed')])]"
+        />
+    </record>
+</odoo>

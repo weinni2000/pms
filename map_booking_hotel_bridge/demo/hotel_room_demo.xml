@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- The rooms of the holiday home on the "Holiday Home" demo map. The
+         dormitory is let bed by bed: each bed is a room of the "Dormitory Bed"
+         type, and the dormitory zone holds that type instead of single rooms. -->
+    <record id="hotel_room_type_demo_holiday_home" model="hotel.room.type">
+        <field name="name">Holiday Home Flat</field>
+        <field name="categ_id" ref="hotel.rooms" />
+    </record>
+    <record id="hotel_room_type_demo_dormitory_bed" model="hotel.room.type">
+        <field name="name">Dormitory Bed</field>
+        <field name="categ_id" ref="hotel.rooms" />
+    </record>
+    <record id="hotel_room_demo_flat_1" model="hotel.room">
+        <field name="name">Holiday Home - Flat 1</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_holiday_home" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">120.00</field>
+        <field name="capacity">2</field>
+    </record>
+    <record id="hotel_room_demo_flat_2" model="hotel.room">
+        <field name="name">Holiday Home - Flat 2</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_holiday_home" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">120.00</field>
+        <field name="capacity">2</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_1" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 1</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_2" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 2</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_3" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 3</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_4" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 4</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_5" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 5</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+    <record id="hotel_room_demo_dormitory_bed_6" model="hotel.room">
+        <field name="name">Holiday Home - Dormitory Bed 6</field>
+        <field name="room_categ_id" ref="hotel_room_type_demo_dormitory_bed" />
+        <field name="isroom" eval="True" />
+        <field name="list_price">35.00</field>
+        <field name="capacity">1</field>
+    </record>
+</odoo>

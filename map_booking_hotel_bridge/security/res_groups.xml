@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="0">
+    <!-- Hotel managers administer the maps of their hotel. -->
+    <record id="hotel.group_hotel_manager" model="res.groups">
+        <field
+            name="implied_ids"
+            eval="[(4, ref('map_booking.group_map_booking_manager'))]"
+        />
+    </record>
+</odoo>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 mytime.click
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="map_booking_map_view_form" model="ir.ui.view">
+        <field name="name">map.booking.map.form</field>
+        <field name="model">map.booking.map</field>
+        <field name="inherit_id" ref="map_booking.map_booking_map_view_form" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//page[@name='zones']/field[@name='zone_ids']"
+                position="before"
+            >
+                <button
+                    name="action_generate_zones_from_rooms"
+                    type="object"
+                    string="Create Zone for Each Room"
+                    class="btn-secondary mb-2 me-1"
+                />
+            </xpath>
+            <xpath
+                expr="//field[@name='zone_ids']/list/button[@name='action_open_form']"
+                position="before"
+            >
+                <field name="room_ids" widget="many2many_tags" optional="show" />
+                <field name="room_type_ids" widget="many2many_tags" optional="show" />
+            </xpath>
+        </field>
+    </record>
+
+    <!-- The maps belong to the Hotel Management application. -->
+    <record id="map_booking.map_booking_menu_root" model="ir.ui.menu">
+        <field name="parent_id" ref="hotel.hotel_management_menu" />
+    </record>
+</odoo>
